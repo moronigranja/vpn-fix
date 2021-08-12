@@ -4,8 +4,11 @@ Um script para definir novas rotas de rede, com o proposito de utilizar os sites
 ## Como utilizar este script
 
 * Baixar a ultima versão do arquivo `vpn fix.ps1`. 
-* Enquanto conectado na VPN, clicar com o botão direito no arquivo, e selecionar a opção "Executar com Powershell"/"Run With Powershell".
-* Aceitar a permissão para executar como administrador, pois é necessária para mudar as configurções de rede do computador.
+* Abrir o powershell como administrador
+* Ir para o caminho onde o `vpn fix.ps1` foi baixado.
+* Executar este comando: `Unblock-File -Path .\vpn fix.ps1` 
+* Executar o script: `.\vpn fix.ps1'
+* Aceitar a permissão para executar como administrador, pois é necessária para mudar as configurações de rede do computador.
 
 ## Como desfazer as mudanças do script
 
