@@ -1,4 +1,4 @@
-# VPN fix 1.4 by mgranja
+# VPN fix 1.4 by mgranja (https://github.com/moronigranja/vpn-fix)
 # changelog
 # v 1.0 -> Criado script que utiliza ip e indice de rede automaticos
 # v 1.1 -> adicionada subrede 10.106.X.X para algumas urls novas
