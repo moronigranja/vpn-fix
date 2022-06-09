@@ -42,9 +42,20 @@ if ((Test-Admin) -eq $false)  {
 Set-Location "$workingDirOverride"
 ##### END ELEVATE TO ADMIN #####
 
-Write-Output "Definindo novas rotas para VPN..."
+$adapter = Get-NetAdapter -InterfaceDescription "PANGP*"
+if ($adapter.status -eq "Up") {
+	Write-Output "Definindo novas rotas para VPN..."
 
-Get-NetAdapter -InterfaceDescription "PANGP*" | Set-NetIPInterface -InterfaceMetric 150
-Get-NetAdapter -InterfaceDescription "PANGP*" | Remove-NetRoute -Confirm:$False
-Get-NetAdapter -InterfaceDescription "PANGP*" | New-NetRoute -DestinationPrefix 10.25.0.0/16
-Get-NetAdapter -InterfaceDescription "PANGP*" | New-NetRoute -DestinationPrefix 10.96.0.0/12
+	$adapter | Set-NetIPInterface -InterfaceMetric 150
+	$adapter | Remove-NetRoute -Confirm:$False
+	$adapter | New-NetRoute -DestinationPrefix 10.25.0.0/16
+	$adapter | New-NetRoute -DestinationPrefix 10.96.0.0/12
+	$adapter | New-NetRoute -DestinationPrefix 0.0.0.0/0
+	
+	#Write-Output "Redefinindo DNS da VPN"
+	
+	$adapter | Set-DnsClientServerAddress -ServerAddresses ("10.104.91.200","10.104.211.200")
+}
+else {
+	Write-Output "Não conectado à  VPN UHG"
+}
