@@ -42,20 +42,28 @@ if ((Test-Admin) -eq $false)  {
 Set-Location "$workingDirOverride"
 ##### END ELEVATE TO ADMIN #####
 
-$adapter = Get-NetAdapter -InterfaceDescription "PANGP*"
-if ($adapter.status -eq "Up") {
-	Write-Output "Definindo novas rotas para VPN..."
+Do {
+	$adapter = Get-NetAdapter -InterfaceDescription "PANGP*"
+	if ($adapter.status -eq "Up") {
+		Write-Output "`nDefinindo novas rotas para VPN...`n"
 
-	$adapter | Set-NetIPInterface -InterfaceMetric 150
-	$adapter | Remove-NetRoute -Confirm:$False
-	$adapter | New-NetRoute -DestinationPrefix 10.25.0.0/16
-	$adapter | New-NetRoute -DestinationPrefix 10.96.0.0/12
-	$adapter | New-NetRoute -DestinationPrefix 0.0.0.0/0
+		$adapter | Set-NetIPInterface -InterfaceMetric 150
+		$adapter | Remove-NetRoute -Confirm:$False
+		$adapter | New-NetRoute -DestinationPrefix 10.25.0.0/16
+		$adapter | New-NetRoute -DestinationPrefix 10.96.0.0/12
+		$adapter | New-NetRoute -DestinationPrefix 0.0.0.0/0
+		
+		#Write-Output "Redefinindo DNS da VPN"
+		
+		$adapter | Set-DnsClientServerAddress -ServerAddresses ("10.104.91.200","10.104.211.200")
+	}
+	else {
+		Write-Output "Não conectado à VPN UHG"
+	}
 	
-	#Write-Output "Redefinindo DNS da VPN"
-	
-	$adapter | Set-DnsClientServerAddress -ServerAddresses ("10.104.91.200","10.104.211.200")
-}
-else {
-	Write-Output "Não conectado à  VPN UHG"
-}
+	Write-Output "`nPressione qualquer tecla para executar o bypass do VPN novamente (ESC para cancelar)"
+	$Key = [Console]::ReadKey($True)
+
+} While ( $Key.Key -NE [ConsoleKey]::Escape )
+
+Write-Output "Execução do bypass do VPN concluída."
